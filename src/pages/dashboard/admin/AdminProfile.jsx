@@ -3,16 +3,13 @@ import { Save, User } from 'lucide-react';
 import useAuth from '../../../hooks/useAuth';
 import { usersAPI } from '../../../services/api';
 
-const Profile = () => {
+const AdminProfile = () => {
     const { user, updateUserProfile } = useAuth();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        photoURL: '',
-        university: '',
-        gpa: '',
-        bio: ''
+        photoURL: ''
     });
 
     useEffect(() => {
@@ -20,10 +17,7 @@ const Profile = () => {
             setFormData({
                 name: user.displayName || '',
                 email: user.email || '',
-                photoURL: user.photoURL || '',
-                university: '',
-                gpa: '',
-                bio: ''
+                photoURL: user.photoURL || ''
             });
         }
     }, [user]);
@@ -40,17 +34,11 @@ const Profile = () => {
         setLoading(true);
 
         try {
-            // Update Firebase profile
             await updateUserProfile(formData.name, formData.photoURL);
-
-            // Optionally update MongoDB user data
             await usersAPI.createOrUpdateUser({
                 name: formData.name,
                 email: formData.email,
-                photoURL: formData.photoURL,
-                university: formData.university,
-                gpa: formData.gpa,
-                bio: formData.bio
+                photoURL: formData.photoURL
             });
 
             alert('Profile updated successfully!');
@@ -73,8 +61,8 @@ const Profile = () => {
                     )}
                 </div>
                 <div>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>{user?.displayName || 'User'}</h2>
-                    <p style={{ color: 'var(--text-muted)' }}>Student</p>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>{user?.displayName || 'Admin'}</h2>
+                    <p style={{ color: 'var(--text-muted)' }}>Administrator</p>
                 </div>
             </div>
 
@@ -100,7 +88,7 @@ const Profile = () => {
                             style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--bg-body)' }}
                         />
                     </div>
-                    <div>
+                    <div style={{ gridColumn: '1 / -1' }}>
                         <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' }}>Photo URL</label>
                         <input
                             type="text"
@@ -111,40 +99,6 @@ const Profile = () => {
                             style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
                         />
                     </div>
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' }}>University</label>
-                        <input
-                            type="text"
-                            name="university"
-                            value={formData.university}
-                            onChange={handleChange}
-                            placeholder="Your university"
-                            style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' }}>GPA</label>
-                        <input
-                            type="text"
-                            name="gpa"
-                            value={formData.gpa}
-                            onChange={handleChange}
-                            placeholder="3.5"
-                            style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
-                        />
-                    </div>
-                </div>
-
-                <div style={{ marginBottom: '2rem' }}>
-                    <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' }}>Bio</label>
-                    <textarea
-                        rows="4"
-                        name="bio"
-                        value={formData.bio}
-                        onChange={handleChange}
-                        placeholder="Tell us about yourself..."
-                        style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontFamily: 'inherit' }}
-                    />
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -157,4 +111,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default AdminProfile;

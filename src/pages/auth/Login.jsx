@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, AlertCircle, ArrowRight, GraduationCap } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
-import { usersAPI } from '../../services/api';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -11,24 +10,6 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { signIn, googleSignIn } = useAuth();
-
-    const redirectBasedOnRole = async (userEmail) => {
-        try {
-            const res = await usersAPI.getUserByEmail(userEmail);
-            const role = res.data.role;
-
-            if (role === 'Admin') {
-                navigate('/dashboard/admin');
-            } else if (role === 'Moderator') {
-                navigate('/dashboard/moderator');
-            } else {
-                navigate('/dashboard/student');
-            }
-        } catch (err) {
-            console.error('Role fetch failed', err);
-            navigate('/dashboard/student'); // Default fallback
-        }
-    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -40,7 +21,8 @@ const Login = () => {
         setLoading(true);
         try {
             await signIn(email, password);
-            await redirectBasedOnRole(email);
+            // Redirect to home page instead of dashboard
+            navigate('/');
         } catch (err) {
             setError('Failed to login: ' + err.message);
         } finally {
@@ -51,8 +33,9 @@ const Login = () => {
     const handleGoogleLogin = async () => {
         setLoading(true);
         try {
-            const result = await googleSignIn();
-            await redirectBasedOnRole(result.user.email);
+            await googleSignIn();
+            // Redirect to home page instead of dashboard
+            navigate('/');
         } catch (err) {
             setError('Google sign-in failed: ' + err.message);
         } finally {

@@ -3,15 +3,22 @@ import { MapPin, Calendar, Clock, DollarSign, ArrowRight, Heart } from 'lucide-r
 import { Link } from 'react-router-dom';
 
 const ScholarshipCard = ({ scholarship }) => {
-    // Generate a random image based on ID if not provided (mock)
+    // Diverse fallback images for variety
     const images = [
         "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
         "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-        "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
         "https://images.unsplash.com/photo-1592280771800-bcf9de231baf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
         "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-        "https://images.unsplash.com/photo-1590579492906-41f05a677096?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+        "https://images.unsplash.com/photo-1590579492906-41f05a677096?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1580582932707-520aed937b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
     ];
+
+    // The common duplicate image URL from database - treat it as missing
+    const duplicateImageUrl = "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
 
     // Map MongoDB fields to component fields if necessary
     const {
@@ -32,7 +39,19 @@ const ScholarshipCard = ({ scholarship }) => {
     const displayDeadline = applicationDeadline || deadline;
     const displayId = _id || id;
 
-    const bgImage = images[(displayUniversity?.length || 0) % images.length];
+    // Generate a unique index based on scholarship properties for varied fallback
+    const hashString = (displayId || '') + (displayTitle || '') + (displayUniversity || '');
+    let hash = 0;
+    for (let i = 0; i < hashString.length; i++) {
+        hash = ((hash << 5) - hash) + hashString.charCodeAt(i);
+        hash = hash & hash;
+    }
+    const imageIndex = Math.abs(hash) % images.length;
+
+    // Check if image exists and is not the duplicate one
+    const rawImage = scholarship.universityImage || scholarship.image;
+    const hasValidImage = rawImage && rawImage !== duplicateImageUrl;
+    const bgImage = hasValidImage ? rawImage : images[imageIndex];
 
     return (
         <div style={{
@@ -51,7 +70,7 @@ const ScholarshipCard = ({ scholarship }) => {
         >
             {/* Image Header */}
             <div style={{ height: '200px', position: 'relative', overflow: 'hidden', margin: '12px 12px 0', borderRadius: '20px' }}>
-                <img src={scholarship.universityImage || bgImage} alt={displayUniversity} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={bgImage} alt={displayUniversity} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
 
                 {/* Overlay Gradient (Subtle) */}
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.2), transparent, rgba(0,0,0,0.1))' }}></div>

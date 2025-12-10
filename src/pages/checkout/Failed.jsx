@@ -14,7 +14,7 @@ const Failed = () => {
             </p>
 
             <div style={{ display: 'flex', gap: '1rem' }}>
-                <Link to="/checkout" className="btn btn-primary"><RefreshCw size={18} /> Try Again</Link>
+                <Link to="/scholarships" className="btn btn-primary"><RefreshCw size={18} /> Try Again</Link>
                 <Link to="/support" className="btn btn-ghost">Contact Support</Link>
             </div>
         </div>

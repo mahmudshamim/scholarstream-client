@@ -4,6 +4,7 @@ import Categories from '../components/home/Categories';
 import FeaturedScholarships from '../components/home/FeaturedScholarships';
 import Testimonials from '../components/home/Testimonials';
 import TrustedBy from '../components/home/TrustedBy';
+import FAQ from '../components/home/FAQ';
 import CTA from '../components/home/CTA';
 
 const Home = () => {
@@ -14,6 +15,7 @@ const Home = () => {
             <Categories />
             <Testimonials />
             <TrustedBy />
+            <FAQ />
             <CTA />
         </>
     );

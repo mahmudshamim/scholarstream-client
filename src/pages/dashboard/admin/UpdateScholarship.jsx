@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Save } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { apiSecure } from '../../../services/api';
-import useAuth from '../../../hooks/useAuth';
+import { useNavigate, useParams } from 'react-router-dom';
+import { apiSecure, scholarshipsAPI } from '../../../services/api';
 
-const AddScholarship = () => {
+const UpdateScholarship = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { id } = useParams();
     const [loading, setLoading] = useState(false);
+    const [fetching, setFetching] = useState(true);
 
     const [formData, setFormData] = useState({
         scholarshipName: '',
@@ -24,6 +24,36 @@ const AddScholarship = () => {
         serviceCharge: '',
         applicationDeadline: ''
     });
+
+    useEffect(() => {
+        const fetchScholarship = async () => {
+            try {
+                const res = await scholarshipsAPI.getById(id);
+                const data = res.data;
+                setFormData({
+                    scholarshipName: data.scholarshipName || '',
+                    universityName: data.universityName || '',
+                    universityImage: data.universityImage || '',
+                    universityCountry: data.universityCountry || '',
+                    universityCity: data.universityCity || '',
+                    universityWorldRank: data.universityWorldRank || '',
+                    subjectCategory: data.subjectCategory || 'Engineering',
+                    scholarshipCategory: data.scholarshipCategory || 'Full Funding',
+                    degree: data.degree || 'Bachelor',
+                    tuitionFees: data.tuitionFees || '',
+                    applicationFees: data.applicationFees || '',
+                    serviceCharge: data.serviceCharge || '',
+                    applicationDeadline: data.applicationDeadline ? data.applicationDeadline.split('T')[0] : ''
+                });
+                setFetching(false);
+            } catch (error) {
+                console.error('Failed to fetch scholarship', error);
+                alert('Failed to load scholarship');
+                navigate('/dashboard/admin/scholarships');
+            }
+        };
+        fetchScholarship();
+    }, [id, navigate]);
 
     const handleChange = (e) => {
         setFormData({
@@ -42,17 +72,15 @@ const AddScholarship = () => {
                 tuitionFees: parseFloat(formData.tuitionFees) || 0,
                 applicationFees: parseFloat(formData.applicationFees) || 0,
                 serviceCharge: parseFloat(formData.serviceCharge) || 0,
-                universityWorldRank: parseInt(formData.universityWorldRank) || 0,
-                postedUserEmail: user?.email,
-                scholarshipPostDate: new Date().toISOString()
+                universityWorldRank: parseInt(formData.universityWorldRank) || 0
             };
 
-            await apiSecure.post('/scholarships', scholarshipData);
-            alert('Scholarship added successfully!');
+            await apiSecure.put(`/scholarships/${id}`, scholarshipData);
+            alert('Scholarship updated successfully!');
             navigate('/dashboard/admin/scholarships');
         } catch (error) {
-            console.error('Failed to add scholarship', error);
-            alert('Failed to add scholarship');
+            console.error('Failed to update scholarship', error);
+            alert('Failed to update scholarship');
         } finally {
             setLoading(false);
         }
@@ -61,9 +89,17 @@ const AddScholarship = () => {
     const inputStyle = { width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' };
     const labelStyle = { display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' };
 
+    if (fetching) {
+        return (
+            <div style={{ background: 'white', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', padding: '2rem', textAlign: 'center' }}>
+                Loading scholarship data...
+            </div>
+        );
+    }
+
     return (
         <div style={{ background: 'white', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
-            <h1 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '2rem' }}>Add New Scholarship</h1>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '2rem' }}>Update Scholarship</h1>
 
             <form onSubmit={handleSubmit}>
                 {/* Scholarship Name */}
@@ -247,7 +283,7 @@ const AddScholarship = () => {
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
                     <button type="button" className="btn btn-ghost" onClick={() => navigate(-1)}>Cancel</button>
                     <button type="submit" className="btn btn-primary" disabled={loading}>
-                        <Save size={18} /> {loading ? 'Publishing...' : 'Publish Scholarship'}
+                        <Save size={18} /> {loading ? 'Updating...' : 'Update Scholarship'}
                     </button>
                 </div>
             </form>
@@ -255,4 +291,4 @@ const AddScholarship = () => {
     );
 };
 
-export default AddScholarship;
+export default UpdateScholarship;

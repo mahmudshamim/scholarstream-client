@@ -45,11 +45,11 @@ const MyApplications = () => {
     };
 
     const handlePay = (app) => {
-        navigate('/checkout', { state: { scholarship: app } });
+        navigate(`/checkout/${app.scholarshipId}`);
     };
 
     const handleEdit = (app) => {
-        navigate('/checkout', { state: { scholarship: app, isEdit: true } });
+        navigate(`/checkout/${app.scholarshipId}`);
     };
 
     const handleAddReview = async () => {

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Clock, CheckCircle, XCircle, FileText } from 'lucide-react';
+import { applicationsAPI } from '../../../services/api';
+import useAuth from '../../../hooks/useAuth';
 
 const StatCard = ({ label, value, icon: Icon, color }) => (
     <div style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: 'var(--shadow-sm)' }}>
@@ -14,13 +16,49 @@ const StatCard = ({ label, value, icon: Icon, color }) => (
 );
 
 const StudentDashboard = () => {
+    const { user } = useAuth();
+    const [applications, setApplications] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState({
+        total: 0,
+        pending: 0,
+        accepted: 0,
+        rejected: 0
+    });
+
+    useEffect(() => {
+        const fetchApplications = async () => {
+            if (!user?.email) return;
+
+            try {
+                const res = await applicationsAPI.getUserApplications(user.email);
+                const apps = res.data || [];
+                setApplications(apps);
+
+                // Calculate stats from real data
+                const total = apps.length;
+                const pending = apps.filter(app => app.applicationStatus === 'pending').length;
+                const accepted = apps.filter(app => app.applicationStatus === 'completed').length;
+                const rejected = apps.filter(app => app.applicationStatus === 'rejected').length;
+
+                setStats({ total, pending, accepted, rejected });
+                setLoading(false);
+            } catch (error) {
+                console.error('Failed to fetch applications', error);
+                setLoading(false);
+            }
+        };
+
+        fetchApplications();
+    }, [user]);
+
     return (
         <div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-                <StatCard label="Applications Submitted" value="12" icon={FileText} color="var(--primary)" />
-                <StatCard label="Pending Review" value="4" icon={Clock} color="var(--warning)" />
-                <StatCard label="Accepted" value="2" icon={CheckCircle} color="var(--success)" />
-                <StatCard label="Rejected" value="6" icon={XCircle} color="var(--error)" />
+                <StatCard label="Applications Submitted" value={stats.total} icon={FileText} color="var(--primary)" />
+                <StatCard label="Pending Review" value={stats.pending} icon={Clock} color="var(--warning)" />
+                <StatCard label="Accepted" value={stats.accepted} icon={CheckCircle} color="var(--success)" />
+                <StatCard label="Rejected" value={stats.rejected} icon={XCircle} color="var(--error)" />
             </div>
 
             {/* Recent Activity / Applications Table Preview */}
@@ -38,29 +76,42 @@ const StudentDashboard = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {[
-                                { title: 'Global Excellence Scholarship', uni: 'Stanford University', date: 'Oct 12, 2025', status: 'Pending' },
-                                { title: 'Women in Tech Fellowship', uni: 'Imperial College London', date: 'Oct 10, 2025', status: 'Accepted' },
-                                { title: 'Computer Science Merit', uni: 'ETH Zurich', date: 'Oct 05, 2025', status: 'Rejected' },
-                            ].map((app, idx) => (
-                                <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
-                                    <td style={{ padding: '1rem', fontWeight: '600' }}>{app.title}</td>
-                                    <td style={{ padding: '1rem' }}>{app.uni}</td>
-                                    <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>{app.date}</td>
-                                    <td style={{ padding: '1rem' }}>
-                                        <span style={{
-                                            padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600',
-                                            background: app.status === 'Accepted' ? '#dcfce7' : app.status === 'Rejected' ? '#fee2e2' : '#fef3c7',
-                                            color: app.status === 'Accepted' ? '#166534' : app.status === 'Rejected' ? '#991b1b' : '#92400e'
-                                        }}>
-                                            {app.status}
-                                        </span>
-                                    </td>
-                                    <td style={{ padding: '1rem' }}>
-                                        <button className="btn-ghost" style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}>View</button>
+                            {loading ? (
+                                <tr>
+                                    <td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                                        Loading applications...
                                     </td>
                                 </tr>
-                            ))}
+                            ) : applications.length === 0 ? (
+                                <tr>
+                                    <td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>
+                                        No applications yet. Start applying to scholarships!
+                                    </td>
+                                </tr>
+                            ) : (
+                                applications.slice(0, 5).map((app) => (
+                                    <tr key={app._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                                        <td style={{ padding: '1rem', fontWeight: '600' }}>{app.scholarshipCategory || 'N/A'}</td>
+                                        <td style={{ padding: '1rem' }}>{app.universityName}</td>
+                                        <td style={{ padding: '1rem', color: 'var(--text-muted)' }}>
+                                            {new Date(app.applicationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                        </td>
+                                        <td style={{ padding: '1rem' }}>
+                                            <span style={{
+                                                padding: '0.25rem 0.75rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '600',
+                                                background: app.applicationStatus === 'completed' ? '#dcfce7' : app.applicationStatus === 'rejected' ? '#fee2e2' : '#fef3c7',
+                                                color: app.applicationStatus === 'completed' ? '#166534' : app.applicationStatus === 'rejected' ? '#991b1b' : '#92400e',
+                                                textTransform: 'capitalize'
+                                            }}>
+                                                {app.applicationStatus}
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '1rem' }}>
+                                            <button className="btn-ghost" style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}>View</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

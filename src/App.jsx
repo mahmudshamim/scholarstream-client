@@ -26,6 +26,9 @@ import AddScholarship from './pages/dashboard/admin/AddScholarship';
 import ModeratorDashboard from './pages/dashboard/moderator/ModeratorDashboard';
 import ManageApplicationsMod from './pages/dashboard/moderator/ManageApplications';
 import ManageReviewsMod from './pages/dashboard/moderator/ManageReviews';
+import AdminProfile from './pages/dashboard/admin/AdminProfile';
+import ModeratorProfile from './pages/dashboard/moderator/ModeratorProfile';
+import UpdateScholarship from './pages/dashboard/admin/UpdateScholarship';
 
 function App() {
   return (
@@ -46,7 +49,7 @@ function App() {
           <Route path="/scholarships/:id" element={<PrivateRoute><ScholarshipDetails /></PrivateRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
+          <Route path="/checkout/:id" element={<PrivateRoute><Checkout /></PrivateRoute>} />
           <Route path="/success" element={<PrivateRoute><Success /></PrivateRoute>} />
           <Route path="/failed" element={<PrivateRoute><Failed /></PrivateRoute>} />
           <Route path="*" element={<NotFound />} />
@@ -65,12 +68,15 @@ function App() {
           <Route path="scholarships" element={<ManageScholarships />} />
           <Route path="users" element={<ManageUsers />} />
           <Route path="add" element={<AddScholarship />} />
+          <Route path="profile" element={<AdminProfile />} />
+          <Route path="update-scholarship/:id" element={<UpdateScholarship />} />
         </Route>
 
         <Route path="/dashboard/moderator" element={<PrivateRoute><DashboardLayout role="moderator" /></PrivateRoute>}>
           <Route index element={<ModeratorDashboard />} />
           <Route path="applications" element={<ManageApplicationsMod />} />
           <Route path="reviews" element={<ManageReviewsMod />} />
+          <Route path="profile" element={<ModeratorProfile />} />
         </Route>
       </Routes>
     </Router>

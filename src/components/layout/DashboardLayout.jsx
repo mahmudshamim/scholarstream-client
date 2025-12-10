@@ -26,12 +26,14 @@ const DashboardLayout = ({ role = 'student' }) => {
         { name: 'Scholarships', path: '/dashboard/admin/scholarships', icon: FileText },
         { name: 'Users', path: '/dashboard/admin/users', icon: Users },
         { name: 'Add New', path: '/dashboard/admin/add', icon: PlusCircle },
+        { name: 'My Profile', path: '/dashboard/admin/profile', icon: User },
     ];
 
     const moderatorLinks = [
         { name: 'Overview', path: '/dashboard/moderator', icon: LayoutDashboard },
         { name: 'Applications', path: '/dashboard/moderator/applications', icon: FileText },
         { name: 'Reviews', path: '/dashboard/moderator/reviews', icon: Star },
+        { name: 'My Profile', path: '/dashboard/moderator/profile', icon: User },
     ];
 
     const links = role === 'admin' ? adminLinks : role === 'moderator' ? moderatorLinks : studentLinks;
@@ -50,9 +52,9 @@ const DashboardLayout = ({ role = 'student' }) => {
                 {/* Sidebar Header */}
                 <div style={{ height: '70px', display: 'flex', alignItems: 'center', justifyContent: isSidebarOpen ? 'space-between' : 'center', padding: '0 1.5rem', borderBottom: '1px solid var(--border)' }}>
                     {isSidebarOpen && (
-                        <span style={{ fontSize: '1.25rem', fontWeight: '800', letterSpacing: '-0.5px' }}>
+                        <Link to="/" style={{ fontSize: '1.25rem', fontWeight: '800', letterSpacing: '-0.5px', textDecoration: 'none', color: 'inherit' }}>
                             Scholar<span className="gradient-text">Stream</span>
-                        </span>
+                        </Link>
                     )}
                     <button onClick={() => setSidebarOpen(!isSidebarOpen)} style={{ color: 'var(--text-muted)' }}>
                         {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
@@ -82,6 +84,7 @@ const DashboardLayout = ({ role = 'student' }) => {
                             {isSidebarOpen && <span>{link.name}</span>}
                         </NavLink>
                     ))}
+
                 </nav>
 
                 {/* User Profile Snippet in Sidebar Bottom */}

@@ -55,8 +55,8 @@ const Register = () => {
 
             await axiosPublic.post('/users', userInfo);
 
-            // Always redirect to student dashboard (new users are students)
-            navigate('/dashboard/student');
+            // Redirect to home page instead of dashboard
+            navigate('/');
         } catch (err) {
             setError('Failed to register: ' + err.message);
         }
@@ -77,8 +77,8 @@ const Register = () => {
 
             await axiosPublic.post('/users', userInfo);
 
-            // Always redirect to student dashboard (new users are students)
-            navigate('/dashboard/student');
+            // Redirect to home page instead of dashboard
+            navigate('/');
         } catch (err) {
             setError('Google sign-up failed: ' + err.message);
         }
