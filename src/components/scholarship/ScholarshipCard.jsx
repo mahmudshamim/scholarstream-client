@@ -123,15 +123,15 @@ const ScholarshipCard = ({ scholarship }) => {
                 {/* Details List */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '2rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#64748b' }}>
-                        <MapPin size={18} color="#94a3b8" />
+                        <MapPin size={18} color="#8b5cf6" />
                         <span>{displayLocation}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#10b981', fontWeight: '600' }}>
-                        <DollarSign size={18} />
+                        <DollarSign size={18} color="#10b981" />
                         <span>{displayValue}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#64748b' }}>
-                        <Calendar size={18} color="#94a3b8" />
+                        <Calendar size={18} color="#ef4444" />
                         <span>Deadline: {displayDeadline}</span>
                     </div>
                 </div>
@@ -141,17 +141,18 @@ const ScholarshipCard = ({ scholarship }) => {
                     width: '100%',
                     padding: '0.85rem',
                     borderRadius: '50px',
-                    border: '1px solid var(--border)',
-                    background: 'transparent',
-                    color: '#334155',
+                    border: 'none',
+                    background: 'linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%)',
+                    color: 'white',
                     fontWeight: '600',
                     fontSize: '0.95rem',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.5rem',
-                    transition: 'all 0.2s'
-                }} className="hover:bg-slate-50 hover:border-slate-300">
+                    transition: 'all 0.3s',
+                    boxShadow: '0 4px 15px rgba(79, 70, 229, 0.35)'
+                }} className="hover:shadow-lg hover:shadow-primary/40 hover:-translate-y-0.5">
                     View Details <ArrowRight size={16} />
                 </Link>
             </div>

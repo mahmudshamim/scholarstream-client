@@ -19,6 +19,7 @@ const AllScholarships = () => {
         category: [],
         funding: 'Any'
     });
+    const [sortBy, setSortBy] = useState('recommended');
 
     // Reset Filters
     const resetFilters = () => {
@@ -109,6 +110,20 @@ const AllScholarships = () => {
         return () => clearTimeout(timeoutId);
     }, [currentPage, searchTerm, filters]); // Re-fetch when these change
 
+    // Sort scholarships based on sortBy state
+    const sortedScholarships = [...scholarships].sort((a, b) => {
+        switch (sortBy) {
+            case 'deadline':
+                return new Date(a.applicationDeadline || a.deadline || '9999') - new Date(b.applicationDeadline || b.deadline || '9999');
+            case 'value-high':
+                return (b.tuitionFees || 0) - (a.tuitionFees || 0);
+            case 'value-low':
+                return (a.tuitionFees || 0) - (b.tuitionFees || 0);
+            default:
+                return 0; // recommended - keep original order
+        }
+    });
+
     // Sync local search term with URL query
     useEffect(() => {
         setSearchTerm(query);
@@ -131,7 +146,7 @@ const AllScholarships = () => {
                 <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Browse Scholarships</h1>
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                     <div style={{ flex: 1, position: 'relative', minWidth: '300px' }}>
-                        <Search size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: '1rem' }} />
+                        <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: '0.85rem' }} />
                         <input
                             type="text"
                             placeholder="Search scholarships..."
@@ -140,22 +155,37 @@ const AllScholarships = () => {
                             onKeyDown={handleSearch}
                             style={{
                                 width: '100%',
-                                padding: '0.75rem 0.75rem 0.75rem 3rem',
-                                borderRadius: 'var(--radius-sm)',
-                                border: '1px solid var(--border)',
-                                fontSize: '1rem',
-                                outline: 'none'
+                                padding: '0.6rem 1rem 0.6rem 2.5rem',
+                                borderRadius: '10px',
+                                border: '2px solid #e2e8f0',
+                                fontSize: '0.95rem',
+                                outline: 'none',
+                                background: 'white',
+                                boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
+                                transition: 'all 0.2s ease'
+                            }}
+                            onFocus={(e) => {
+                                e.target.style.borderColor = '#8b5cf6';
+                                e.target.style.boxShadow = '0 0 0 3px rgba(139, 92, 246, 0.12)';
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = '#e2e8f0';
+                                e.target.style.boxShadow = '0 2px 6px rgba(0,0,0,0.04)';
                             }}
                         />
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Sort by:</span>
-                        <select style={{ padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'white' }}>
-                            <option>Recommended</option>
-                            <option>Deadline (Soonest)</option>
-                            <option>Value (High to Low)</option>
-                            <option>Value (Low to High)</option>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            style={{ padding: '0.6rem 0.75rem', borderRadius: '10px', border: '2px solid #e2e8f0', background: 'white', fontSize: '0.9rem', cursor: 'pointer' }}
+                        >
+                            <option value="recommended">Recommended</option>
+                            <option value="deadline">Deadline (Soonest)</option>
+                            <option value="value-high">Value (High to Low)</option>
+                            <option value="value-low">Value (Low to High)</option>
                         </select>
                     </div>
                 </div>
@@ -171,7 +201,7 @@ const AllScholarships = () => {
                         <div style={{ padding: '4rem', textAlign: 'center' }}>Loading...</div>
                     ) : scholarships.length > 0 ? (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
-                            {scholarships.map(sch => (
+                            {sortedScholarships.map(sch => (
                                 <ScholarshipCard key={sch._id} scholarship={sch} />
                             ))}
                         </div>

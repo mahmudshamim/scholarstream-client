@@ -32,14 +32,11 @@ const Navbar = () => {
     };
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
-        };
+        const handleScroll = () => setIsScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Close mobile menu when route changes
     useEffect(() => {
         setIsMobileMenuOpen(false);
     }, [location.pathname]);
@@ -53,115 +50,67 @@ const Navbar = () => {
 
     return (
         <>
-            <nav
-                className={`transition-all duration-300 ${isScrolled ? 'glass-panel' : ''}`}
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    zIndex: 1000,
-                    height: isScrolled ? '70px' : 'var(--nav-height)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    background: isScrolled ? 'rgba(255, 255, 255, 0.85)' : 'white',
-                    backdropFilter: isScrolled ? 'blur(12px)' : 'none',
-                    borderBottom: isScrolled ? '1px solid rgba(255,255,255,0.3)' : 'none',
-                    boxShadow: isScrolled ? 'var(--shadow-sm)' : 'none',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                }}
-            >
-                <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <nav className={`
+                fixed top-0 left-0 right-0 z-50 flex items-center transition-all duration-300
+                ${isScrolled
+                    ? 'h-[70px] bg-white/85 backdrop-blur-xl border-b border-white/30 shadow-sm'
+                    : 'h-20 bg-white'
+                }
+            `}>
+                <div className="container flex justify-between items-center w-full">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center gap-2" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', zIndex: 1001 }}>
-                        <div style={{
-                            width: '40px',
-                            height: '40px',
-                            background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
-                            borderRadius: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'white'
-                        }}>
+                    <Link to="/" className="flex items-center gap-3 z-50">
+                        <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center text-white">
                             <GraduationCap size={24} />
                         </div>
-                        <span style={{ fontSize: '1.5rem', fontWeight: '700', letterSpacing: '-0.5px' }}>
+                        <span className="text-2xl font-bold tracking-tight">
                             Scholar<span className="gradient-text">Stream</span>
                         </span>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }} className="desktop-nav">
-                        <div style={{ display: 'flex', gap: '2rem' }}>
+                    <div className="hidden md:flex items-center gap-8">
+                        <div className="flex gap-8">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.path}
                                     to={link.path}
-                                    style={{
-                                        color: isActive(link.path) ? 'var(--primary)' : 'var(--text-main)',
-                                        fontWeight: isActive(link.path) ? '600' : '500',
-                                    }}
+                                    className={`transition-colors ${isActive(link.path)
+                                            ? 'text-primary font-semibold'
+                                            : 'text-text-main hover:text-primary font-medium'
+                                        }`}
                                 >
                                     {link.name}
                                 </Link>
                             ))}
                         </div>
 
-                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <div className="flex gap-4 items-center">
                             {user ? (
                                 <>
-                                    <button onClick={handleDashboardClick} className="btn btn-ghost" style={{ padding: '0.5rem 1rem' }}>
+                                    <button onClick={handleDashboardClick} className="btn btn-ghost px-4 py-2">
                                         Dashboard
                                     </button>
-                                    <div style={{ position: 'relative' }}>
+                                    <div className="relative">
                                         <button
                                             onClick={() => setShowProfileMenu(!showProfileMenu)}
-                                            style={{
-                                                width: '40px',
-                                                height: '40px',
-                                                borderRadius: '50%',
-                                                overflow: 'hidden',
-                                                border: '2px solid var(--primary)',
-                                                cursor: 'pointer',
-                                                background: 'transparent',
-                                                padding: 0
-                                            }}
+                                            className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary cursor-pointer bg-transparent p-0"
                                         >
                                             {user.photoURL ? (
-                                                <img src={user.photoURL} alt={user.displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                <img src={user.photoURL} alt={user.displayName} className="w-full h-full object-cover" />
                                             ) : (
-                                                <User size={24} color="var(--primary)" />
+                                                <User size={24} className="text-primary m-auto" />
                                             )}
                                         </button>
                                         {showProfileMenu && (
-                                            <div style={{
-                                                position: 'absolute',
-                                                top: '50px',
-                                                right: 0,
-                                                background: 'white',
-                                                borderRadius: 'var(--radius-md)',
-                                                boxShadow: 'var(--shadow-lg)',
-                                                padding: '0.5rem',
-                                                minWidth: '180px',
-                                                zIndex: 1000
-                                            }}>
-                                                <div style={{ padding: '0.75rem', borderBottom: '1px solid var(--border)' }}>
-                                                    <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{user.displayName || 'User'}</p>
-                                                    <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{user.email}</p>
+                                            <div className="absolute top-12 right-0 bg-white rounded-2xl shadow-lg p-2 min-w-[180px] z-50">
+                                                <div className="p-3 border-b border-border">
+                                                    <p className="font-semibold mb-1">{user.displayName || 'User'}</p>
+                                                    <p className="text-sm text-text-muted">{user.email}</p>
                                                 </div>
                                                 <button
                                                     onClick={handleLogout}
-                                                    style={{
-                                                        width: '100%',
-                                                        padding: '0.75rem',
-                                                        textAlign: 'left',
-                                                        background: 'transparent',
-                                                        border: 'none',
-                                                        cursor: 'pointer',
-                                                        color: 'var(--error)',
-                                                        fontWeight: '500'
-                                                    }}
+                                                    className="w-full p-3 text-left text-error font-medium hover:bg-error/5 rounded-lg transition-colors"
                                                 >
                                                     Logout
                                                 </button>
@@ -171,8 +120,8 @@ const Navbar = () => {
                                 </>
                             ) : (
                                 <>
-                                    <Link to="/login" className="btn btn-ghost" style={{ padding: '0.5rem 1rem' }}>Log In</Link>
-                                    <Link to="/register" className="btn btn-primary" style={{ padding: '0.5rem 1.25rem', borderRadius: 'var(--radius-md)' }}>
+                                    <Link to="/login" className="btn btn-ghost px-4 py-2">Log In</Link>
+                                    <Link to="/register" className="btn btn-primary px-5 py-2 rounded-2xl">
                                         Register
                                     </Link>
                                 </>
@@ -182,17 +131,8 @@ const Navbar = () => {
 
                     {/* Mobile Toggle Button */}
                     <button
-                        className="mobile-toggle"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        style={{
-                            display: 'none',
-                            background: 'transparent',
-                            border: 'none',
-                            cursor: 'pointer',
-                            padding: '0.5rem',
-                            color: 'var(--text-main)',
-                            zIndex: 1001
-                        }}
+                        className="md:hidden p-2 text-text-main z-50"
                     >
                         {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
@@ -202,51 +142,28 @@ const Navbar = () => {
             {/* Mobile Menu Overlay */}
             {isMobileMenuOpen && (
                 <div
-                    style={{
-                        position: 'fixed',
-                        top: 'var(--nav-height)',
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        background: 'rgba(0, 0, 0, 0.5)',
-                        zIndex: 999,
-                        animation: 'fadeIn 0.3s ease'
-                    }}
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    style={{ top: 'var(--nav-height)' }}
                     onClick={() => setIsMobileMenuOpen(false)}
                 />
             )}
 
             {/* Mobile Menu Panel */}
-            <div
-                className="mobile-menu"
-                style={{
-                    position: 'fixed',
-                    top: 'var(--nav-height)',
-                    left: 0,
-                    right: 0,
-                    background: 'white',
-                    boxShadow: 'var(--shadow-lg)',
-                    zIndex: 1000,
-                    maxHeight: isMobileMenuOpen ? '500px' : '0',
-                    overflow: 'hidden',
-                    transition: 'max-height 0.3s ease',
-                    display: 'none'
-                }}
-            >
-                <div style={{ padding: '1.5rem' }}>
+            <div className={`
+                fixed left-0 right-0 bg-white shadow-lg z-50 transition-all duration-300 overflow-hidden md:hidden
+                ${isMobileMenuOpen ? 'max-h-[500px]' : 'max-h-0'}
+            `} style={{ top: 'var(--nav-height)' }}>
+                <div className="p-6">
                     {/* Mobile Nav Links */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <div className="flex flex-col gap-2 mb-6">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.path}
                                 to={link.path}
-                                style={{
-                                    padding: '0.75rem',
-                                    borderRadius: 'var(--radius-sm)',
-                                    color: isActive(link.path) ? 'var(--primary)' : 'var(--text-main)',
-                                    fontWeight: isActive(link.path) ? '600' : '500',
-                                    background: isActive(link.path) ? 'rgba(79, 70, 229, 0.05)' : 'transparent'
-                                }}
+                                className={`p-3 rounded-lg transition-colors ${isActive(link.path)
+                                        ? 'text-primary font-semibold bg-primary/5'
+                                        : 'text-text-main hover:bg-bg-body'
+                                    }`}
                             >
                                 {link.name}
                             </Link>
@@ -254,35 +171,35 @@ const Navbar = () => {
                     </div>
 
                     {/* Mobile Auth Section */}
-                    <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem' }}>
+                    <div className="border-t border-border pt-6">
                         {user ? (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', background: 'var(--bg-card)', borderRadius: 'var(--radius-sm)' }}>
-                                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--primary)', flexShrink: 0 }}>
+                            <div className="flex flex-col gap-4">
+                                <div className="flex items-center gap-3 p-3 bg-bg-card rounded-lg">
+                                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary shrink-0">
                                         {user.photoURL ? (
-                                            <img src={user.photoURL} alt={user.displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <img src={user.photoURL} alt={user.displayName} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div style={{ width: '100%', height: '100%', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: '600' }}>
+                                            <div className="w-full h-full bg-primary flex items-center justify-center text-white font-semibold">
                                                 {user.displayName?.charAt(0) || 'U'}
                                             </div>
                                         )}
                                     </div>
                                     <div>
-                                        <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{user.displayName || 'User'}</p>
-                                        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{user.email}</p>
+                                        <p className="font-semibold">{user.displayName || 'User'}</p>
+                                        <p className="text-sm text-text-muted">{user.email}</p>
                                     </div>
                                 </div>
-                                <button onClick={handleDashboardClick} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                                <button onClick={handleDashboardClick} className="btn btn-primary w-full justify-center">
                                     Dashboard
                                 </button>
-                                <button onClick={handleLogout} className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center', color: 'var(--error)' }}>
+                                <button onClick={handleLogout} className="btn btn-ghost w-full justify-center text-error">
                                     Logout
                                 </button>
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                <Link to="/login" className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center' }}>Log In</Link>
-                                <Link to="/register" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                            <div className="flex flex-col gap-4">
+                                <Link to="/login" className="btn btn-ghost w-full justify-center">Log In</Link>
+                                <Link to="/register" className="btn btn-primary w-full justify-center">
                                     Register
                                 </Link>
                             </div>
@@ -290,35 +207,6 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
-
-            <style>{`
-                @media (max-width: 768px) {
-                    .desktop-nav {
-                        display: none !important;
-                    }
-                    .mobile-toggle {
-                        display: block !important;
-                    }
-                    .mobile-menu {
-                        display: block !important;
-                    }
-                }
-                @media (min-width: 769px) {
-                    .desktop-nav {
-                        display: flex !important;
-                    }
-                    .mobile-toggle {
-                        display: none !important;
-                    }
-                    .mobile-menu {
-                        display: none !important;
-                    }
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-            `}</style>
         </>
     );
 };

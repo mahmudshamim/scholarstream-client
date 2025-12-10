@@ -12,49 +12,29 @@ const CATEGORIES = [
 
 const Categories = () => {
     return (
-        <section style={{ padding: '6rem 0', background: '#f8fafc' }}>
+        <section className="py-24 bg-bg-body">
             <div className="container">
-                <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                    <span style={{ color: 'var(--primary)', fontWeight: '600', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Browse by Field</span>
-                    <h2 style={{ fontSize: '2.5rem', fontWeight: '800', margin: '0.5rem 0' }}>
+                <div className="text-center mb-12">
+                    <span className="text-primary font-semibold text-sm tracking-widest uppercase">Browse by Field</span>
+                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mt-2">
                         Explore by Category
                     </h2>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.5rem' }}>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
                     {CATEGORIES.map((cat, idx) => (
-                        <div key={idx}
-                            style={{
-                                background: 'white',
-                                padding: '2rem 1.5rem',
-                                borderRadius: '24px',
-                                border: '1px solid transparent',
-                                textAlign: 'left',
-                                transition: 'all 0.3s ease',
-                                cursor: 'pointer',
-                                boxShadow: 'var(--shadow-sm)'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-5px)';
-                                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0)';
-                                e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-                            }}
+                        <div
+                            key={idx}
+                            className="bg-white p-6 md:p-8 rounded-3xl text-left cursor-pointer shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                         >
-                            <div style={{
-                                background: `${cat.color}15`,
-                                color: cat.color,
-                                width: '56px', height: '56px',
-                                borderRadius: '16px',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                marginBottom: '1.5rem'
-                            }}>
-                                <cat.icon size={28} />
+                            <div
+                                className="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center mb-6"
+                                style={{ background: `${cat.color}15`, color: cat.color }}
+                            >
+                                <cat.icon size={24} className="md:w-7 md:h-7" />
                             </div>
-                            <h3 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '0.25rem', color: '#1e1b4b' }}>{cat.label}</h3>
-                            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <h3 className="text-sm md:text-base font-bold mb-1 text-[#1e1b4b]">{cat.label}</h3>
+                            <p className="text-text-muted text-xs md:text-sm flex items-center justify-between">
                                 {cat.count} openings
                                 <ChevronRight size={16} />
                             </p>

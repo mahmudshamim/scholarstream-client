@@ -37,66 +37,31 @@ const FAQ = () => {
     };
 
     return (
-        <section style={{
-            padding: '5rem 0',
-            background: 'linear-gradient(180deg, var(--bg-card) 0%, white 100%)',
-            position: 'relative',
-            overflow: 'hidden'
-        }}>
+        <section className="py-20 bg-gradient-to-b from-bg-card to-white relative overflow-hidden">
             {/* Background decoration */}
-            <div style={{
-                position: 'absolute',
-                top: '20%',
-                right: '-5%',
-                width: '400px',
-                height: '400px',
-                background: 'rgba(139, 92, 246, 0.05)',
-                borderRadius: '50%',
-                filter: 'blur(60px)',
-                zIndex: 0
-            }}></div>
+            <div className="absolute top-[20%] -right-[5%] w-96 h-96 bg-secondary/5 rounded-full blur-[60px] z-0"></div>
 
-            <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+            <div className="container relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    style={{ textAlign: 'center', marginBottom: '3rem' }}
+                    className="text-center mb-12"
                 >
-                    <div style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        padding: '0.5rem 1rem',
-                        background: 'rgba(139, 92, 246, 0.1)',
-                        borderRadius: '50px',
-                        marginBottom: '1rem'
-                    }}>
-                        <HelpCircle size={20} color="var(--primary)" />
-                        <span style={{ color: 'var(--primary)', fontWeight: '600', fontSize: '0.9rem' }}>
-                            FAQ
-                        </span>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/10 rounded-full mb-4">
+                        <HelpCircle size={20} className="text-primary" />
+                        <span className="text-primary font-semibold text-sm">FAQ</span>
                     </div>
-                    <h2 style={{
-                        fontSize: '2.5rem',
-                        fontWeight: '800',
-                        marginBottom: '1rem',
-                        color: '#1e1b4b'
-                    }}>
+                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-4 text-[#1e1b4b]">
                         Frequently Asked Questions
                     </h2>
-                    <p style={{
-                        color: 'var(--text-muted)',
-                        fontSize: '1.1rem',
-                        maxWidth: '600px',
-                        margin: '0 auto'
-                    }}>
+                    <p className="text-text-muted text-base md:text-lg max-w-xl mx-auto">
                         Got questions? We've got answers. Find everything you need to know about scholarships.
                     </p>
                 </motion.div>
 
-                <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+                <div className="max-w-3xl mx-auto">
                     {faqs.map((faq, index) => (
                         <motion.div
                             key={index}
@@ -104,59 +69,27 @@ const FAQ = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            style={{
-                                marginBottom: '1rem',
-                                background: 'white',
-                                borderRadius: 'var(--radius-md)',
-                                border: '1px solid var(--border)',
-                                overflow: 'hidden',
-                                boxShadow: activeIndex === index ? 'var(--shadow-md)' : 'var(--shadow-sm)',
-                                transition: 'box-shadow 0.3s ease'
-                            }}
+                            className={`mb-4 bg-white rounded-2xl border border-border overflow-hidden transition-shadow ${activeIndex === index ? 'shadow-md' : 'shadow-sm'
+                                }`}
                         >
                             <button
                                 onClick={() => toggleFAQ(index)}
-                                style={{
-                                    width: '100%',
-                                    padding: '1.5rem',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    background: 'transparent',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    textAlign: 'left',
-                                    transition: 'background 0.2s ease'
-                                }}
+                                className="w-full p-6 flex justify-between items-center text-left hover:bg-bg-body/50 transition-colors"
                             >
-                                <span style={{
-                                    fontSize: '1.1rem',
-                                    fontWeight: '600',
-                                    color: activeIndex === index ? 'var(--primary)' : 'var(--text-main)',
-                                    transition: 'color 0.2s ease',
-                                    paddingRight: '1rem'
-                                }}>
+                                <span className={`text-base md:text-lg font-semibold pr-4 transition-colors ${activeIndex === index ? 'text-primary' : 'text-text-main'
+                                    }`}>
                                     {faq.question}
                                 </span>
                                 <motion.div
                                     animate={{ rotate: activeIndex === index ? 180 : 0 }}
                                     transition={{ duration: 0.3 }}
-                                    style={{
-                                        width: '32px',
-                                        height: '32px',
-                                        borderRadius: '50%',
-                                        background: activeIndex === index ? 'var(--primary)' : 'var(--bg-card)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        flexShrink: 0,
-                                        transition: 'background 0.2s ease'
-                                    }}
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${activeIndex === index ? 'bg-primary' : 'bg-bg-card'
+                                        }`}
                                 >
                                     {activeIndex === index ? (
-                                        <Minus size={18} color="white" />
+                                        <Minus size={18} className="text-white" />
                                     ) : (
-                                        <Plus size={18} color="var(--primary)" />
+                                        <Plus size={18} className="text-primary" />
                                     )}
                                 </motion.div>
                             </button>
@@ -167,14 +100,9 @@ const FAQ = () => {
                                         animate={{ height: 'auto', opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}
                                         transition={{ duration: 0.3, ease: 'easeInOut' }}
-                                        style={{ overflow: 'hidden' }}
+                                        className="overflow-hidden"
                                     >
-                                        <div style={{
-                                            padding: '0 1.5rem 1.5rem 1.5rem',
-                                            color: 'var(--text-muted)',
-                                            lineHeight: '1.7',
-                                            fontSize: '1rem'
-                                        }}>
+                                        <div className="px-6 pb-6 text-text-muted leading-relaxed">
                                             {faq.answer}
                                         </div>
                                     </motion.div>
@@ -190,38 +118,13 @@ const FAQ = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.3 }}
-                    style={{
-                        marginTop: '3rem',
-                        textAlign: 'center',
-                        padding: '3rem 2rem',
-                        background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                        borderRadius: '24px',
-                        color: 'white',
-                        maxWidth: '900px',
-                        margin: '3rem auto 0'
-                    }}
+                    className="mt-12 text-center p-8 md:p-12 bg-gradient-to-br from-indigo-500 to-secondary rounded-3xl text-white max-w-4xl mx-auto"
                 >
-                    <h3 style={{ fontSize: '1.75rem', fontWeight: '700', marginBottom: '0.75rem' }}>
-                        Still have questions?
-                    </h3>
-                    <p style={{ marginBottom: '2rem', opacity: 0.95, fontSize: '1.05rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
+                    <h3 className="text-xl md:text-2xl font-bold mb-3">Still have questions?</h3>
+                    <p className="mb-8 opacity-95 text-base md:text-lg max-w-xl mx-auto">
                         Can't find the answer you're looking for? Our support team is here to help.
                     </p>
-                    <button className="btn" style={{
-                        background: 'white',
-                        color: '#6366f1',
-                        padding: '0.875rem 2.5rem',
-                        fontWeight: '600',
-                        border: 'none',
-                        cursor: 'pointer',
-                        borderRadius: '50px',
-                        fontSize: '1rem',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                        transition: 'transform 0.2s ease'
-                    }}
-                        onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-                        onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
-                    >
+                    <button className="bg-white text-indigo-500 px-10 py-4 rounded-full font-semibold shadow-lg hover:scale-105 transition-transform">
                         Contact Support
                     </button>
                 </motion.div>

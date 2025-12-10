@@ -3,70 +3,55 @@ import { Heart } from 'lucide-react';
 
 const Footer = () => {
     return (
-        <footer style={{ background: 'white', borderTop: '1px solid var(--border)', padding: '4rem 0 2rem' }}>
+        <footer className="bg-white border-t border-border py-16 pb-8">
             <div className="container">
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
-
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                     {/* Brand */}
                     <div>
-                        <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1rem' }}>
+                        <h3 className="text-2xl font-bold mb-4">
                             Scholar<span className="gradient-text">Stream</span>
                         </h3>
-                        <p style={{ color: 'var(--text-muted)', maxWidth: '300px' }}>
+                        <p className="text-text-muted max-w-xs">
                             Empowering students worldwide to achieve their academic dreams through accessible scholarship opportunities.
                         </p>
                     </div>
 
                     {/* Links 1 */}
                     <div>
-                        <h4 style={{ fontWeight: '600', marginBottom: '1rem' }}>Platform</h4>
-                        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-muted)' }}>
-                            <li><a href="#">Browse Scholarships</a></li>
-                            <li><a href="#">Universities</a></li>
-                            <li><a href="#">Success Stories</a></li>
-                            <li><a href="#">Pricing</a></li>
+                        <h4 className="font-semibold mb-4">Platform</h4>
+                        <ul className="flex flex-col gap-2 text-text-muted">
+                            <li><a href="#" className="hover:text-primary transition-colors">Browse Scholarships</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Universities</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Success Stories</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Pricing</a></li>
                         </ul>
                     </div>
 
                     {/* Links 2 */}
                     <div>
-                        <h4 style={{ fontWeight: '600', marginBottom: '1rem' }}>Resources</h4>
-                        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-muted)' }}>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Scholarship Guide</a></li>
-                            <li><a href="#">Help Center</a></li>
-                            <li><a href="#">Contact Support</a></li>
+                        <h4 className="font-semibold mb-4">Resources</h4>
+                        <ul className="flex flex-col gap-2 text-text-muted">
+                            <li><a href="#" className="hover:text-primary transition-colors">Blog</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Scholarship Guide</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Contact Support</a></li>
                         </ul>
                     </div>
 
                     {/* Legal */}
                     <div>
-                        <h4 style={{ fontWeight: '600', marginBottom: '1rem' }}>Legal</h4>
-                        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.5rem', color: 'var(--text-muted)' }}>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms of Service</a></li>
-                            <li><a href="#">Cookie Policy</a></li>
+                        <h4 className="font-semibold mb-4">Legal</h4>
+                        <ul className="flex flex-col gap-2 text-text-muted">
+                            <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
+                            <li><a href="#" className="hover:text-primary transition-colors">Cookie Policy</a></li>
                         </ul>
                     </div>
                 </div>
 
-                <div style={{
-                    borderTop: '1px solid var(--border)',
-                    paddingTop: '2rem',
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    color: 'var(--text-muted)',
-                    fontSize: '0.9rem'
-                }}>
+                <div className="border-t border-border pt-8 flex flex-col sm:flex-row flex-wrap justify-between items-center gap-4 text-text-muted text-sm">
                     <p>© 2025 ScholarStream. All rights reserved.</p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span>Made with</span>
-                        <Heart size={16} fill="var(--error)" color="var(--error)" />
-                        <span>for students.</span>
-                    </div>
+                    <p>Empowering students to reach their future. Crafted by <span className="font-semibold text-primary">Mahmud</span>.</p>
                 </div>
             </div>
         </footer>

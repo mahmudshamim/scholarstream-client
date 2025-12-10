@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, FileText, User, Star, LogOut, Bell, Settings, Search, Menu, X, PlusCircle, Users, BarChart2 } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
 
 const DashboardLayout = ({ role = 'student' }) => {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isMobile, setIsMobile] = useState(false);
     const location = useLocation();
     const { user, logOut } = useAuth();
     const navigate = useNavigate();
+
+    // Handle window resize
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth < 768;
+            setIsMobile(mobile);
+            setSidebarOpen(!mobile);
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Close sidebar on route change (mobile only)
+    useEffect(() => {
+        if (isMobile) setSidebarOpen(false);
+    }, [location.pathname, isMobile]);
 
     const handleLogOut = async () => {
         await logOut();
@@ -39,98 +58,125 @@ const DashboardLayout = ({ role = 'student' }) => {
     const links = role === 'admin' ? adminLinks : role === 'moderator' ? moderatorLinks : studentLinks;
 
     return (
-        <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-body)' }}>
+        <div className="flex min-h-screen bg-bg-body">
+            {/* Mobile Overlay */}
+            {isMobile && isSidebarOpen && (
+                <div
+                    onClick={() => setSidebarOpen(false)}
+                    className="fixed inset-0 bg-black/50 z-40 transition-opacity"
+                />
+            )}
+
             {/* Sidebar */}
-            <aside style={{
-                width: isSidebarOpen ? '260px' : '80px',
-                background: 'white',
-                borderRight: '1px solid var(--border)',
-                transition: 'all 0.3s ease',
-                display: 'flex', flexDirection: 'column',
-                position: 'sticky', top: 0, height: '100vh', zIndex: 50
-            }}>
+            <aside className={`
+                ${isMobile ? 'fixed z-50' : 'sticky'} 
+                ${isMobile && !isSidebarOpen ? '-translate-x-full' : 'translate-x-0'}
+                ${isSidebarOpen ? 'w-64' : 'w-20'}
+                top-0 h-screen bg-white border-r border-border
+                flex flex-col transition-all duration-300
+                ${isMobile && isSidebarOpen ? 'shadow-2xl' : ''}
+            `}>
                 {/* Sidebar Header */}
-                <div style={{ height: '70px', display: 'flex', alignItems: 'center', justifyContent: isSidebarOpen ? 'space-between' : 'center', padding: '0 1.5rem', borderBottom: '1px solid var(--border)' }}>
+                <div className={`h-[70px] flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} px-6 border-b border-border`}>
                     {isSidebarOpen && (
-                        <Link to="/" style={{ fontSize: '1.25rem', fontWeight: '800', letterSpacing: '-0.5px', textDecoration: 'none', color: 'inherit' }}>
+                        <Link to="/" className="text-xl font-extrabold tracking-tight">
                             Scholar<span className="gradient-text">Stream</span>
                         </Link>
                     )}
-                    <button onClick={() => setSidebarOpen(!isSidebarOpen)} style={{ color: 'var(--text-muted)' }}>
+                    <button
+                        onClick={() => isMobile ? setSidebarOpen(false) : setSidebarOpen(!isSidebarOpen)}
+                        className="text-text-muted hover:text-primary p-2 transition-colors"
+                    >
                         {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
                 </div>
 
                 {/* Navigation */}
-                <nav style={{ flex: 1, padding: '1.5rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <nav className="flex-1 p-4 flex flex-col gap-1">
                     {links.map(link => (
                         <NavLink
                             key={link.path}
                             to={link.path}
-                            end={link.path === `/dashboard/${role}`} // Exact match for root dashboard path
-                            style={({ isActive }) => ({
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '1rem',
-                                padding: '0.75rem 1rem',
-                                borderRadius: 'var(--radius-sm)',
-                                color: isActive ? 'var(--primary)' : 'var(--text-muted)',
-                                background: isActive ? 'rgba(79, 70, 229, 0.05)' : 'transparent',
-                                fontWeight: isActive ? '600' : '500',
-                                justifyContent: isSidebarOpen ? 'flex-start' : 'center'
-                            })}
+                            end={link.path === `/dashboard/${role}`}
+                            className={({ isActive }) => `
+                                flex items-center gap-4 px-4 py-3 rounded-lg transition-all
+                                ${isActive
+                                    ? 'text-primary bg-primary/5 font-semibold'
+                                    : 'text-text-muted hover:text-primary hover:bg-primary/5'
+                                }
+                                ${isSidebarOpen ? 'justify-start' : 'justify-center'}
+                            `}
                         >
                             <link.icon size={20} />
                             {isSidebarOpen && <span>{link.name}</span>}
                         </NavLink>
                     ))}
-
                 </nav>
 
-                {/* User Profile Snippet in Sidebar Bottom */}
-                <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: isSidebarOpen ? 'flex-start' : 'center' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0 }}>
-                            {user?.photoURL ? <img src={user.photoURL} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} /> : user?.displayName?.charAt(0) || 'U'}
+                {/* User Profile in Sidebar Bottom */}
+                <div className="p-4 border-t border-border">
+                    <div className={`flex items-center gap-3 ${isSidebarOpen ? 'justify-start' : 'justify-center'}`}>
+                        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-white shrink-0 overflow-hidden">
+                            {user?.photoURL
+                                ? <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                                : user?.displayName?.charAt(0) || 'U'
+                            }
                         </div>
                         {isSidebarOpen && (
-                            <div style={{ overflow: 'hidden' }}>
-                                <div style={{ fontWeight: '600', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>{user?.displayName || 'User'}</div>
-                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>{role}</div>
+                            <div className="flex-1 overflow-hidden">
+                                <div className="font-semibold text-sm truncate">{user?.displayName || 'User'}</div>
+                                <div className="text-xs text-text-muted capitalize">{role}</div>
                             </div>
                         )}
                         {isSidebarOpen && (
-                            <button onClick={handleLogOut} style={{ marginLeft: 'auto', color: 'var(--text-muted)' }}><LogOut size={18} /></button>
+                            <button onClick={handleLogOut} className="text-text-muted hover:text-error transition-colors p-2">
+                                <LogOut size={18} />
+                            </button>
                         )}
                     </div>
                 </div>
             </aside>
 
             {/* Main Content Area */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+            <div className="flex-1 flex flex-col min-w-0">
                 {/* Topbar */}
-                <header style={{ height: '70px', background: 'white', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2rem', position: 'sticky', top: 0, zIndex: 40 }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: '700', textTransform: 'capitalize' }}>
-                        {location.pathname.split('/').pop().replace('-', ' ') || 'Overview'}
-                    </h2>
+                <header className="h-[70px] bg-white border-b border-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-30">
+                    <div className="flex items-center gap-4">
+                        {isMobile && (
+                            <button
+                                onClick={() => setSidebarOpen(true)}
+                                className="text-text-main hover:text-primary p-2 transition-colors"
+                            >
+                                <Menu size={24} />
+                            </button>
+                        )}
+                        <h2 className="text-base md:text-xl font-bold capitalize">
+                            {location.pathname.split('/').pop().replace('-', ' ') || 'Overview'}
+                        </h2>
+                    </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                        <div style={{ position: 'relative' }}>
-                            <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', top: '10px', left: '12px' }} />
-                            <input type="text" placeholder="Search..." style={{ padding: '0.5rem 0.5rem 0.5rem 2.5rem', borderRadius: '20px', border: '1px solid var(--border)', fontSize: '0.9rem', width: '200px' }} />
+                    <div className="flex items-center gap-3 md:gap-6">
+                        {/* Search - hidden on mobile */}
+                        <div className="hidden md:block relative">
+                            <Search size={18} className="absolute top-2.5 left-3 text-text-muted" />
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                className="pl-10 pr-4 py-2 rounded-full border border-border text-sm w-52 focus:outline-none focus:border-primary transition-colors"
+                            />
                         </div>
-                        <button style={{ position: 'relative', color: 'var(--text-muted)' }}>
+                        <button className="relative text-text-muted hover:text-primary p-2 transition-colors">
                             <Bell size={20} />
-                            <span style={{ position: 'absolute', top: '-2px', right: '-2px', width: '8px', height: '8px', background: 'var(--error)', borderRadius: '50%' }}></span>
+                            <span className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
                         </button>
-                        <button style={{ color: 'var(--text-muted)' }}>
+                        <button className="text-text-muted hover:text-primary p-2 transition-colors">
                             <Settings size={20} />
                         </button>
                     </div>
                 </header>
 
                 {/* Page Content */}
-                <main style={{ flex: 1, padding: '2rem', overflowY: 'auto' }}>
+                <main className="flex-1 p-4 md:p-8 overflow-y-auto">
                     <Outlet />
                 </main>
             </div>
