@@ -13,9 +13,13 @@ const DashboardLayout = ({ role = 'student' }) => {
     // Handle window resize
     useEffect(() => {
         const handleResize = () => {
-            const mobile = window.innerWidth < 768;
+            const mobile = window.innerWidth < 1024; // lg breakpoint
             setIsMobile(mobile);
-            setSidebarOpen(!mobile);
+            if (mobile) {
+                setSidebarOpen(false);
+            } else {
+                setSidebarOpen(true);
+            }
         };
 
         handleResize();
@@ -42,9 +46,10 @@ const DashboardLayout = ({ role = 'student' }) => {
 
     const adminLinks = [
         { name: 'Overview', path: '/dashboard/admin', icon: BarChart2 },
+        { name: 'Applications', path: '/dashboard/admin/applications', icon: FileText },
         { name: 'Scholarships', path: '/dashboard/admin/scholarships', icon: FileText },
         { name: 'Users', path: '/dashboard/admin/users', icon: Users },
-        { name: 'Add New', path: '/dashboard/admin/add', icon: PlusCircle },
+        { name: 'Add New', path: '/dashboard/admin/add-scholarship', icon: PlusCircle },
         { name: 'My Profile', path: '/dashboard/admin/profile', icon: User },
     ];
 
@@ -58,78 +63,83 @@ const DashboardLayout = ({ role = 'student' }) => {
     const links = role === 'admin' ? adminLinks : role === 'moderator' ? moderatorLinks : studentLinks;
 
     return (
-        <div className="flex min-h-screen bg-bg-body">
+        <div className="flex min-h-screen bg-bg-body font-sans text-text-main">
             {/* Mobile Overlay */}
             {isMobile && isSidebarOpen && (
                 <div
                     onClick={() => setSidebarOpen(false)}
-                    className="fixed inset-0 bg-black/50 z-40 transition-opacity"
+                    className="fixed inset-0 bg-black/50 z-40 transition-opacity backdrop-blur-sm"
                 />
             )}
 
             {/* Sidebar */}
             <aside className={`
-                ${isMobile ? 'fixed z-50' : 'sticky'} 
-                ${isMobile && !isSidebarOpen ? '-translate-x-full' : 'translate-x-0'}
-                ${isSidebarOpen ? 'w-64' : 'w-20'}
-                top-0 h-screen bg-white border-r border-border
-                flex flex-col transition-all duration-300
+                fixed lg:sticky top-0 z-50 h-screen bg-white border-r border-border
+                flex flex-col transition-all duration-300 ease-in-out
+                ${isMobile
+                    ? (isSidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64')
+                    : (isSidebarOpen ? 'w-64' : 'w-20')
+                }
                 ${isMobile && isSidebarOpen ? 'shadow-2xl' : ''}
             `}>
                 {/* Sidebar Header */}
-                <div className={`h-[70px] flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} px-6 border-b border-border`}>
-                    {isSidebarOpen && (
-                        <Link to="/" className="text-xl font-extrabold tracking-tight">
-                            Scholar<span className="gradient-text">Stream</span>
+                <div className={`h-[70px] flex items-center ${!isMobile && !isSidebarOpen ? 'justify-center' : 'justify-between px-6'} border-b border-border`}>
+                    {(!isMobile && !isSidebarOpen) ? (
+                        <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold">S</div>
+                    ) : (
+                        <Link to="/" className="text-xl font-extrabold tracking-tight truncate">
+                            Scholar<span className="text-primary">Stream</span>
                         </Link>
                     )}
+
                     <button
-                        onClick={() => isMobile ? setSidebarOpen(false) : setSidebarOpen(!isSidebarOpen)}
-                        className="text-text-muted hover:text-primary p-2 transition-colors"
+                        onClick={() => setSidebarOpen(!isSidebarOpen)}
+                        className={`text-text-muted hover:text-primary p-2 transition-colors rounded-lg hover:bg-gray-100 ${isMobile ? 'block' : 'hidden lg:block'}`}
                     >
-                        {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+                        {isMobile ? <X size={20} /> : (isSidebarOpen ? <Menu size={20} /> : <Menu size={20} />)}
                     </button>
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 p-4 flex flex-col gap-1">
+                <nav className="flex-1 p-4 flex flex-col gap-2 overflow-y-auto">
                     {links.map(link => (
                         <NavLink
                             key={link.path}
                             to={link.path}
                             end={link.path === `/dashboard/${role}`}
                             className={({ isActive }) => `
-                                flex items-center gap-4 px-4 py-3 rounded-lg transition-all
+                                flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200
                                 ${isActive
-                                    ? 'text-primary bg-primary/5 font-semibold'
-                                    : 'text-text-muted hover:text-primary hover:bg-primary/5'
+                                    ? 'bg-primary text-white shadow-md shadow-primary/20'
+                                    : 'text-text-muted hover:bg-gray-100 hover:text-text-main'
                                 }
-                                ${isSidebarOpen ? 'justify-start' : 'justify-center'}
+                                ${!isMobile && !isSidebarOpen ? 'justify-center' : ''}
                             `}
+                            title={!isMobile && !isSidebarOpen ? link.name : ''}
                         >
-                            <link.icon size={20} />
-                            {isSidebarOpen && <span>{link.name}</span>}
+                            <link.icon size={20} className="shrink-0" />
+                            {(!isMobile && !isSidebarOpen) ? null : <span className="font-medium truncate">{link.name}</span>}
                         </NavLink>
                     ))}
                 </nav>
 
                 {/* User Profile in Sidebar Bottom */}
                 <div className="p-4 border-t border-border">
-                    <div className={`flex items-center gap-3 ${isSidebarOpen ? 'justify-start' : 'justify-center'}`}>
-                        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-white shrink-0 overflow-hidden">
+                    <div className={`flex items-center gap-3 ${!isMobile && !isSidebarOpen ? 'justify-center' : ''}`}>
+                        <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary shrink-0 overflow-hidden border border-border">
                             {user?.photoURL
                                 ? <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
-                                : user?.displayName?.charAt(0) || 'U'
+                                : <User size={20} />
                             }
                         </div>
-                        {isSidebarOpen && (
+                        {(!isMobile && !isSidebarOpen) ? null : (
                             <div className="flex-1 overflow-hidden">
-                                <div className="font-semibold text-sm truncate">{user?.displayName || 'User'}</div>
-                                <div className="text-xs text-text-muted capitalize">{role}</div>
+                                <div className="font-semibold text-sm truncate text-text-main">{user?.displayName || 'User'}</div>
+                                <div className="text-xs text-text-muted capitalize truncate">{role}</div>
                             </div>
                         )}
-                        {isSidebarOpen && (
-                            <button onClick={handleLogOut} className="text-text-muted hover:text-error transition-colors p-2">
+                        {(!isMobile && !isSidebarOpen) ? null : (
+                            <button onClick={handleLogOut} className="text-text-muted hover:text-error transition-colors p-2 rounded-lg hover:bg-red-50" title="Logout">
                                 <LogOut size={18} />
                             </button>
                         )}
@@ -138,45 +148,45 @@ const DashboardLayout = ({ role = 'student' }) => {
             </aside>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 flex flex-col min-w-0 transition-all duration-300">
                 {/* Topbar */}
-                <header className="h-[70px] bg-white border-b border-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-30">
+                <header className="h-[70px] bg-white border-b border-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-30 shadow-sm">
                     <div className="flex items-center gap-4">
                         {isMobile && (
                             <button
                                 onClick={() => setSidebarOpen(true)}
-                                className="text-text-main hover:text-primary p-2 transition-colors"
+                                className="text-text-main hover:text-primary p-2 transition-colors rounded-lg hover:bg-gray-100"
                             >
                                 <Menu size={24} />
                             </button>
                         )}
-                        <h2 className="text-base md:text-xl font-bold capitalize">
-                            {location.pathname.split('/').pop().replace('-', ' ') || 'Overview'}
+                        <h2 className="text-lg md:text-xl font-bold capitalize text-text-main truncate">
+                            {location.pathname.split('/').pop().replace(/-/g, ' ') || 'Overview'}
                         </h2>
                     </div>
 
-                    <div className="flex items-center gap-3 md:gap-6">
+                    <div className="flex items-center gap-2 md:gap-4">
                         {/* Search - hidden on mobile */}
                         <div className="hidden md:block relative">
                             <Search size={18} className="absolute top-2.5 left-3 text-text-muted" />
                             <input
                                 type="text"
                                 placeholder="Search..."
-                                className="pl-10 pr-4 py-2 rounded-full border border-border text-sm w-52 focus:outline-none focus:border-primary transition-colors"
+                                className="pl-10 pr-4 py-2 rounded-full border border-border text-sm w-48 lg:w-64 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all bg-gray-50 focus:bg-white"
                             />
                         </div>
-                        <button className="relative text-text-muted hover:text-primary p-2 transition-colors">
+                        <button className="relative text-text-muted hover:text-primary p-2 transition-colors rounded-full hover:bg-gray-100">
                             <Bell size={20} />
-                            <span className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full ring-2 ring-white"></span>
                         </button>
-                        <button className="text-text-muted hover:text-primary p-2 transition-colors">
+                        <button className="text-text-muted hover:text-primary p-2 transition-colors rounded-full hover:bg-gray-100">
                             <Settings size={20} />
                         </button>
                     </div>
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+                <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto bg-gray-50/50">
                     <Outlet />
                 </main>
             </div>

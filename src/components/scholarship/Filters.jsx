@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import { Filter, X, ChevronDown, ChevronUp } from 'lucide-react';
 
 const FilterSection = ({ title, options, isOpen, onToggle, selectedValues = [], onChange }) => (
-    <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '1.5rem', marginBottom: '1.5rem' }}>
+    <div className="border-b border-border pb-6 mb-6">
         <div
             onClick={onToggle}
-            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', marginBottom: '1rem' }}
+            className="flex justify-between items-center cursor-pointer mb-4 group"
         >
-            <h4 style={{ fontWeight: '600', fontSize: '0.95rem' }}>{title}</h4>
+            <h4 className="font-semibold text-base group-hover:text-primary transition-colors">{title}</h4>
             {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </div>
 
         {isOpen && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div className="flex flex-col gap-3">
                 {options.map((opt, idx) => (
-                    <label key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                    <label key={idx} className="flex items-center gap-2 text-sm text-text-muted cursor-pointer hover:text-text-main transition-color">
                         <input
                             type="checkbox"
-                            style={{ accentColor: 'var(--primary)', width: '16px', height: '16px' }}
+                            className="checkbox checkbox-primary checkbox-sm rounded"
                             checked={selectedValues.includes(opt)}
                             onChange={() => onChange(opt)}
                         />
@@ -36,18 +36,19 @@ const Filters = ({ filters, onFilterChange, onReset }) => {
         category: true,
         fees: true,
     });
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     const toggleSection = (section) => {
         setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
     };
 
-    return (
-        <aside style={{ width: '280px', flexShrink: 0 }} className="filters-sidebar">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+    const FilterContent = () => (
+        <>
+            <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-bold flex items-center gap-2">
                     <Filter size={20} /> Filters
                 </h3>
-                <button className="btn-ghost" style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }} onClick={onReset}>
+                <button className="btn btn-ghost btn-xs text-error" onClick={onReset}>
                     Reset
                 </button>
             </div>
@@ -79,10 +80,10 @@ const Filters = ({ filters, onFilterChange, onReset }) => {
                 onChange={(val) => onFilterChange('category', val)}
             />
 
-            <div style={{ marginBottom: '1.5rem' }}>
-                <h4 style={{ fontWeight: '600', fontSize: '0.95rem', marginBottom: '1rem' }}>Fees Funding</h4>
+            <div className="mb-6">
+                <h4 className="font-semibold text-base mb-4">Fees Funding</h4>
                 <select
-                    style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'white' }}
+                    className="select select-bordered w-full"
                     value={filters.funding}
                     onChange={(e) => onFilterChange('funding', e.target.value)}
                 >
@@ -92,7 +93,39 @@ const Filters = ({ filters, onFilterChange, onReset }) => {
                     <option value="Partial Funding">Partial Funding</option>
                 </select>
             </div>
-        </aside>
+        </>
+    );
+
+    return (
+        <>
+            {/* Desktop Filters */}
+            <aside className="hidden lg:block w-72 shrink-0 filters-sidebar bg-white p-6 rounded-2xl border border-border h-fit sticky top-24">
+                <FilterContent />
+            </aside>
+
+            {/* Mobile Filter Toggle */}
+            <div className="lg:hidden mb-4">
+                <button className="btn btn-outline w-full" onClick={() => setIsMobileOpen(true)}>
+                    <Filter size={18} /> Filter Results
+                </button>
+            </div>
+
+            {/* Mobile Filter Drawer/Modal */}
+            {isMobileOpen && (
+                <div className="fixed inset-0 z-50 flex justify-end">
+                    <div className="absolute inset-0 bg-black/50" onClick={() => setIsMobileOpen(false)} />
+                    <div className="relative z-10 w-full max-w-[300px] bg-white h-full overflow-y-auto p-6 shadow-2xl animate-in slide-in-from-right duration-300">
+                        <button className="absolute top-4 right-4 p-2 text-text-muted" onClick={() => setIsMobileOpen(false)}>
+                            <X size={24} />
+                        </button>
+                        <div className="pt-8">
+                            <FilterContent />
+                            <button className="btn btn-primary w-full mt-4" onClick={() => setIsMobileOpen(false)}>Show Results</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 

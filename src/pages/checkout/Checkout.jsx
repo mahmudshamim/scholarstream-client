@@ -63,8 +63,8 @@ const Checkout = () => {
         universityCity: scholarship.universityCity,
         degree: scholarship.degree,
         subjectCategory: scholarship.subjectCategory,
-        applicantName: user?.displayName || 'Unknown',
-        applicantEmail: user?.email,
+        userName: user?.displayName || 'Unknown',
+        userEmail: user?.email,
         applicantImage: user?.photoURL || '',
         applicationFees: applicationFee,
         serviceCharge: serviceCharge

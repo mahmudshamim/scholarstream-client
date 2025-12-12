@@ -139,48 +139,31 @@ const AllScholarships = () => {
     };
 
     return (
-        <div className="container" style={{ padding: '2rem 1.5rem 4rem' }}>
+        <div className="container px-6 py-8 pb-16">
 
-            {/* Top Bar with Search */}
-            <div style={{ marginBottom: '2rem' }}>
-                <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Browse Scholarships</h1>
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                    <div style={{ flex: 1, position: 'relative', minWidth: '300px' }}>
-                        <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: '0.85rem' }} />
-                        <input
-                            type="text"
-                            placeholder="Search scholarships..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            onKeyDown={handleSearch}
-                            style={{
-                                width: '100%',
-                                padding: '0.6rem 1rem 0.6rem 2.5rem',
-                                borderRadius: '10px',
-                                border: '2px solid #e2e8f0',
-                                fontSize: '0.95rem',
-                                outline: 'none',
-                                background: 'white',
-                                boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
-                                transition: 'all 0.2s ease'
-                            }}
-                            onFocus={(e) => {
-                                e.target.style.borderColor = '#8b5cf6';
-                                e.target.style.boxShadow = '0 0 0 3px rgba(139, 92, 246, 0.12)';
-                            }}
-                            onBlur={(e) => {
-                                e.target.style.borderColor = '#e2e8f0';
-                                e.target.style.boxShadow = '0 2px 6px rgba(0,0,0,0.04)';
-                            }}
-                        />
+            {/* Top Bar with Search & Sort */}
+            <div className="mb-8">
+                <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div className="relative w-full md:max-w-xl">
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Search scholarships..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyDown={handleSearch}
+                                className="input w-full pl-12 pr-4 h-12 rounded-full shadow-md border-0 focus:outline-none focus:ring-2 focus:ring-primary/20 text-gray-600"
+                            />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                        </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Sort by:</span>
+                    <div className="flex items-center gap-3 w-full md:w-auto">
+                        <span className="text-sm font-medium text-text-muted whitespace-nowrap">Sort by:</span>
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            style={{ padding: '0.6rem 0.75rem', borderRadius: '10px', border: '2px solid #e2e8f0', background: 'white', fontSize: '0.9rem', cursor: 'pointer' }}
+                            className="select select-bordered w-full md:w-[200px] bg-white font-normal"
                         >
                             <option value="recommended">Recommended</option>
                             <option value="deadline">Deadline (Soonest)</option>
@@ -191,45 +174,62 @@ const AllScholarships = () => {
                 </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '2rem' }}>
+            <div className="mt-8 flex flex-col-reverse lg:flex-row gap-8">
                 {/* Sidebar */}
                 <Filters filters={filters} onFilterChange={handleFilterChange} onReset={resetFilters} />
 
-                {/* Grid */}
-                <div style={{ flex: 1 }}>
+                {/* Scholarship Grid */}
+                <div className="flex-1">
                     {loading ? (
-                        <div style={{ padding: '4rem', textAlign: 'center' }}>Loading...</div>
-                    ) : scholarships.length > 0 ? (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
-                            {sortedScholarships.map(sch => (
-                                <ScholarshipCard key={sch._id} scholarship={sch} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            {[1, 2, 3, 4, 5, 6].map((n) => (
+                                <div key={n} className="h-96 rounded-2xl bg-gray-100 animate-pulse"></div>
                             ))}
                         </div>
+                    ) : scholarships.length === 0 ? (
+                        <div className="text-center py-20">
+                            <h3 className="text-xl font-bold text-text-main mb-2">No scholarships found</h3>
+                            <p className="text-text-muted">Try adjusting your search or filters</p>
+                        </div>
                     ) : (
-                        <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)', background: '#f8fafc', borderRadius: '16px' }}>
-                            <p style={{ fontSize: '1.2rem', fontWeight: '500' }}>No scholarships found for "{searchTerm}"</p>
-                            <p>Try adjusting your search or filters.</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            {scholarships.map((scholarship) => (
+                                <ScholarshipCard key={scholarship._id} scholarship={scholarship} />
+                            ))}
                         </div>
                     )}
 
-                    {/* Pagination - Hide if no results */}
+                    {/* Pagination */}
                     {!loading && scholarships.length > 0 && (
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', alignItems: 'center' }}>
-                            <button className="btn btn-secondary" onClick={handlePrevPage} disabled={currentPage === 1} style={{ opacity: currentPage === 1 ? 0.5 : 1 }}><ChevronLeft size={20} /></button>
+                        <div className="flex justify-center mt-12 gap-2">
+                            <button
+                                className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                onClick={handlePrevPage}
+                                disabled={currentPage === 1}
+                            >
+                                <ChevronLeft size={20} />
+                            </button>
 
-                            {/* Page Numbers */}
                             {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => (
                                 <button
                                     key={pageNum}
-                                    className={pageNum === currentPage ? "btn btn-primary" : "btn btn-ghost"}
+                                    className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-medium transition-all ${pageNum === currentPage
+                                            ? "bg-primary border-primary text-white shadow-md shadow-primary/30"
+                                            : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300"
+                                        }`}
                                     onClick={() => setCurrentPage(pageNum)}
-                                    style={{ width: '40px', height: '40px', padding: 0 }}
                                 >
                                     {pageNum}
                                 </button>
                             ))}
 
-                            <button className="btn btn-secondary" onClick={handleNextPage} disabled={currentPage === totalPages} style={{ opacity: currentPage === totalPages ? 0.5 : 1 }}><ChevronRight size={20} /></button>
+                            <button
+                                className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                                onClick={handleNextPage}
+                                disabled={currentPage === totalPages}
+                            >
+                                <ChevronRight size={20} />
+                            </button>
                         </div>
                     )}
                 </div>

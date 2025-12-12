@@ -44,86 +44,84 @@ const Login = () => {
     };
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex' }}>
-            {/* Left Side - Illustration */}
-            <div className="auth-illustration" style={{
-                flex: 1,
-                background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
-                display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-                padding: '3rem', color: 'white', position: 'relative', overflow: 'hidden'
-            }}>
-                <div style={{ position: 'absolute', width: '100%', height: '100%', background: 'url("https://www.transparenttextures.com/patterns/cubes.png")', opacity: '0.1' }}></div>
-                <div style={{ zIndex: 1, textAlign: 'center', maxWidth: '400px' }}>
-                    <div style={{ width: '80px', height: '80px', background: 'white', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
-                        <GraduationCap size={40} color="var(--primary)" />
+        <div className="min-h-screen flex">
+            {/* Left Side - Illustration (Hidden on mobile) */}
+            <div className="hidden lg:flex flex-1 flex-col justify-center items-center p-12 relative overflow-hidden text-white bg-gradient-to-br from-primary to-secondary">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                <div className="z-10 text-center max-w-md">
+                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl">
+                        <GraduationCap size={40} className="text-primary" />
                     </div>
-                    <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>Welcome Back!</h1>
-                    <p style={{ fontSize: '1.2rem', opacity: '0.9', lineHeight: '1.6' }}>
+                    <h1 className="text-4xl font-extrabold mb-4">Welcome Back!</h1>
+                    <p className="text-lg opacity-90 leading-relaxed">
                         Continue your journey to finding the perfect scholarship. Your future awaits.
                     </p>
                 </div>
             </div>
 
             {/* Right Side - Form */}
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', background: 'white' }}>
-                <div style={{ width: '100%', maxWidth: '450px' }}>
-                    <div style={{ marginBottom: '2rem' }}>
-                        <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem' }}>Log In</h2>
-                        <p style={{ color: 'var(--text-muted)' }}>Don't have an account? <Link to="/register" style={{ color: 'var(--primary)', fontWeight: '600' }}>Sign up</Link></p>
+            <div className="flex-1 flex items-center justify-center p-8 bg-white">
+                <div className="w-full max-w-md space-y-8">
+                    <div className="text-center lg:text-left">
+                        <h2 className="text-3xl font-extrabold text-text-main mb-2">Log In</h2>
+                        <p className="text-text-muted">Don't have an account? <Link to="/register" className="text-primary font-bold hover:underline">Sign up</Link></p>
                     </div>
 
                     {error && (
-                        <div style={{ background: '#fef2f2', color: '#ef4444', padding: '1rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                        <div className="bg-red-50 text-error p-4 rounded-lg flex items-center gap-2 text-sm">
                             <AlertCircle size={18} /> {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleLogin}>
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' }}>Email Address</label>
-                            <div style={{ position: 'relative' }}>
-                                <Mail size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '12px', left: '16px' }} />
+                    <form onSubmit={handleLogin} className="space-y-6">
+                        <div>
+                            <label className="block text-sm font-semibold text-text-main mb-2">Email Address</label>
+                            <div className="relative">
+                                <Mail size={20} className="absolute top-3.5 left-4 text-text-muted" />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="name@example.com"
-                                    style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 3rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '1rem', outline: 'none' }}
+                                    className="input input-bordered w-full pl-12 h-12 text-base focus:border-primary focus:ring-1 focus:ring-primary/20"
                                 />
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                                <label style={{ fontSize: '0.9rem', fontWeight: '600' }}>Password</label>
-                                <a href="#" style={{ fontSize: '0.85rem', color: 'var(--primary)' }}>Forgot password?</a>
+                        <div>
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="text-sm font-semibold text-text-main">Password</label>
+                                <a href="#" className="text-sm text-primary font-medium hover:underline">Forgot password?</a>
                             </div>
-                            <div style={{ position: 'relative' }}>
-                                <Lock size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '12px', left: '16px' }} />
+                            <div className="relative">
+                                <Lock size={20} className="absolute top-3.5 left-4 text-text-muted" />
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
-                                    style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 3rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '1rem', outline: 'none' }}
+                                    className="input input-bordered w-full pl-12 h-12 text-base focus:border-primary focus:ring-1 focus:ring-primary/20"
                                 />
                             </div>
                         </div>
 
-                        <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }} disabled={loading}>
-                            {loading ? 'Logging in...' : 'Log In'} <ArrowRight size={18} />
+                        <button type="submit" className="btn btn-primary w-full h-12 text-base font-bold flex items-center justify-center gap-2" disabled={loading}>
+                            {loading ? 'Logging in...' : 'Log In'} <ArrowRight size={20} />
                         </button>
                     </form>
 
-                    <div style={{ display: 'flex', alignItems: 'center', margin: '2rem 0', color: 'var(--text-muted)' }}>
-                        <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
-                        <span style={{ padding: '0 1rem', fontSize: '0.9rem' }}>OR</span>
-                        <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
+                    <div className="flex items-center gap-4 my-8">
+                        <div className="h-px bg-border flex-1"></div>
+                        <span className="text-text-muted text-sm font-medium">OR</span>
+                        <div className="h-px bg-border flex-1"></div>
                     </div>
 
-                    <button onClick={handleGoogleLogin} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', gap: '0.75rem' }}>
-                        <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" />
-                        Continue with Google
+                    <button
+                        onClick={handleGoogleLogin}
+                        className="btn bg-white text-black border border-gray-200 w-full h-12 flex items-center justify-center gap-2 hover:bg-gray-50"
+                    >
+                        <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><path d="m0 0H512V512H0" fill="#fff"></path><path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path><path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path><path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path><path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"></path></g></svg>
+                        Login with Google
                     </button>
                 </div>
             </div>

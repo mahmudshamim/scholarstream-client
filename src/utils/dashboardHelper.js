@@ -7,18 +7,25 @@ import { usersAPI } from '../services/api';
  */
 export const getDashboardRoute = async (userEmail) => {
     try {
-        const res = await usersAPI.getUserByEmail(userEmail);
-        const role = res.data.role;
+        const res = await usersAPI.getUserByEmail(userEmail?.toLowerCase());
+        console.log('[Dashboard Helper] Role Fetch Response:', res.data);
 
-        if (role === 'Admin') {
+        const role = res.data?.role; // Safe access
+
+        if (!role) {
+            console.warn('[Dashboard Helper] Role is undefined, defaulting to student.');
+            return '/dashboard/student';
+        }
+
+        if (role.toLowerCase() === 'admin') {
             return '/dashboard/admin';
-        } else if (role === 'Moderator') {
+        } else if (role.toLowerCase() === 'moderator') {
             return '/dashboard/moderator';
         } else {
             return '/dashboard/student';
         }
     } catch (err) {
-        console.error('Role fetch failed', err);
+        console.error('[Dashboard Helper] Role fetch failed:', err);
         return '/dashboard/student'; // Default fallback
     }
 };

@@ -1,37 +1,39 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
+
 /* Custom Theme Configuration for Tailwind v4 */
 @theme {
-  /* Brand Colors */
+  /* Brand Colors - Mapping to DaisyUI variables where possible or keeping custom */
   --color-primary: #4f46e5;
   --color-primary-hover: #4338ca;
   --color-secondary: #8b5cf6;
   --color-accent: #3b82f6;
-  
+
   /* Neutral Colors */
   --color-bg-body: #f8fafc;
   --color-bg-card: #ffffff;
   --color-text-main: #0f172a;
   --color-text-muted: #64748b;
-  --color-border: #e2e8f0;
-  
+  --color-border: #cbd5e1;
+
   /* Status Colors */
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
-  
+
   /* Custom Radius */
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 24px;
-  
+
   /* Custom Shadows */
   --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
   /* Font */
   --font-main: 'Outfit', system-ui, sans-serif;
-  
+
   /* Spacing */
   --nav-height: 80px;
 }
@@ -41,6 +43,18 @@ body {
   font-family: var(--font-main);
   background-color: var(--color-bg-body);
   color: var(--color-text-main);
+  --border: var(--color-border);
+}
+
+/* Dashboard Global Overrides using DaisyUI if possible, but keeping basic resets for now */
+.dashboard-layout input:not(.input),
+.dashboard-layout select:not(.select),
+.dashboard-layout textarea:not(.textarea) {
+  /* Fallback for inputs that haven't been migrated to DaisyUI class yet */
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  padding: 0.5rem;
 }
 
 /* Modern Scrollbar */
@@ -70,35 +84,6 @@ body {
   @apply bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent;
 }
 
-/* Button Components */
-.btn {
-  @apply inline-flex items-center justify-center px-6 py-3 rounded-2xl font-semibold transition-all duration-300 gap-2;
-}
-
-.btn-primary {
-  @apply bg-gradient-to-br from-primary to-secondary text-white shadow-lg shadow-primary/30;
-}
-
-.btn-primary:hover {
-  @apply -translate-y-0.5 shadow-xl shadow-primary/40;
-}
-
-.btn-secondary {
-  @apply bg-white text-primary border border-border;
-}
-
-.btn-secondary:hover {
-  @apply bg-bg-body border-primary;
-}
-
-.btn-ghost {
-  @apply text-text-muted;
-}
-
-.btn-ghost:hover {
-  @apply text-primary bg-primary/5;
-}
-
 /* Container */
 .container {
   @apply max-w-7xl mx-auto px-6;
@@ -119,6 +104,7 @@ body {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }

@@ -27,7 +27,7 @@ const ScholarshipCard = ({ scholarship }) => {
         universityName, university,
         universityCountry, universityCity, location,
         scholarshipCategory, type,
-        tuitionFees, value,
+        tuitionFees, value, applicationFees,
         applicationDeadline, deadline
     } = scholarship;
 
@@ -35,7 +35,7 @@ const ScholarshipCard = ({ scholarship }) => {
     const displayUniversity = universityName || university;
     const displayLocation = (universityCity && universityCountry) ? `${universityCity}, ${universityCountry}` : location;
     const displayType = scholarshipCategory || type;
-    const displayValue = tuitionFees ? `$${tuitionFees}` : (value || 'N/A');
+    const displayValue = tuitionFees ? `$${tuitionFees}` : (applicationFees ? `$${applicationFees}` : (value || 'N/A'));
     const displayDeadline = applicationDeadline || deadline;
     const displayId = _id || id;
 

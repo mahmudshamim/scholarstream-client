@@ -44,6 +44,7 @@ const CheckoutForm = ({ price, scholarshipInfo }) => {
         if (error) {
             console.log('[error]', error);
             setCardError(error.message);
+            return;
         } else {
             console.log('[PaymentMethod]', paymentMethod);
             setCardError('');

@@ -67,7 +67,8 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="scholarships" element={<ManageScholarships />} />
           <Route path="users" element={<ManageUsers />} />
-          <Route path="add" element={<AddScholarship />} />
+          <Route path="applications" element={<ManageApplicationsMod />} />
+          <Route path="add-scholarship" element={<AddScholarship />} />
           <Route path="profile" element={<AdminProfile />} />
           <Route path="update-scholarship/:id" element={<UpdateScholarship />} />
         </Route>

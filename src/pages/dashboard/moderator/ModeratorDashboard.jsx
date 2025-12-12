@@ -2,13 +2,13 @@ import React from 'react';
 import { FileText, Star, AlertCircle } from 'lucide-react';
 
 const StatCard = ({ label, value, icon: Icon, color }) => (
-    <div style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '1rem', boxShadow: 'var(--shadow-sm)' }}>
-        <div style={{ width: '50px', height: '50px', borderRadius: '12px', background: `${color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: color }}>
+    <div className="bg-white p-6 rounded-xl border border-border shadow-sm flex items-center gap-4">
+        <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ background: `${color}20`, color: color }}>
             <Icon size={24} />
         </div>
         <div>
-            <div style={{ fontSize: '2rem', fontWeight: '800' }}>{value}</div>
-            <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{label}</div>
+            <div className="text-2xl font-extrabold text-text-main">{value}</div>
+            <div className="text-sm text-text-muted">{label}</div>
         </div>
     </div>
 );
@@ -16,17 +16,19 @@ const StatCard = ({ label, value, icon: Icon, color }) => (
 const ModeratorDashboard = () => {
     return (
         <div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
-                <StatCard label="Pending Applications" value="24" icon={FileText} color="var(--primary)" />
-                <StatCard label="Reviews to Moderate" value="8" icon={Star} color="var(--warning)" />
-                <StatCard label="Flagged Content" value="3" icon={AlertCircle} color="var(--error)" />
+            <h2 className="text-2xl font-bold text-text-main mb-6">Moderator Overview</h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <StatCard label="Pending Applications" value="24" icon={FileText} color="var(--color-primary)" />
+                <StatCard label="Reviews to Moderate" value="8" icon={Star} color="var(--color-warning)" />
+                <StatCard label="Flagged Content" value="3" icon={AlertCircle} color="var(--color-error)" />
             </div>
 
-            <div style={{ background: 'white', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', padding: '1.5rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1.5rem' }}>Quick Actions</h3>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button className="btn btn-primary">Review Applications</button>
-                    <button className="btn btn-secondary">Moderate Comments</button>
+            <div className="bg-white rounded-xl border border-border p-6 shadow-sm">
+                <h3 className="text-lg font-bold text-text-main mb-6">Quick Actions</h3>
+                <div className="flex flex-wrap gap-4">
+                    <button className="btn btn-primary text-white">Review Applications</button>
+                    <button className="btn btn-secondary text-white">Moderate Comments</button>
                 </div>
             </div>
         </div>

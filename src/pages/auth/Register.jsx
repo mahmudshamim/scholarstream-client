@@ -85,118 +85,116 @@ const Register = () => {
     };
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex' }}>
-            {/* Left Side - Illustration */}
-            <div className="auth-illustration" style={{
-                flex: 1,
-                background: 'linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%)',
-                display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-                padding: '3rem', color: 'white', position: 'relative', overflow: 'hidden'
-            }}>
-                <div style={{ position: 'absolute', width: '100%', height: '100%', background: 'url("https://www.transparenttextures.com/patterns/cubes.png")', opacity: '0.1' }}></div>
-                <div style={{ zIndex: 1, textAlign: 'center', maxWidth: '400px' }}>
-                    <div style={{ width: '80px', height: '80px', background: 'white', borderRadius: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
-                        <GraduationCap size={40} color="var(--primary)" />
+        <div className="min-h-screen flex">
+            {/* Left Side - Illustration (Hidden on mobile) */}
+            <div className="hidden lg:flex flex-1 flex-col justify-center items-center p-12 relative overflow-hidden text-white bg-gradient-to-br from-secondary to-primary">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                <div className="z-10 text-center max-w-md">
+                    <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl">
+                        <GraduationCap size={40} className="text-primary" />
                     </div>
-                    <h1 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>Join ScholarStream</h1>
-                    <p style={{ fontSize: '1.2rem', opacity: '0.9', lineHeight: '1.6' }}>
+                    <h1 className="text-4xl font-extrabold mb-4">Join ScholarStream</h1>
+                    <p className="text-lg opacity-90 leading-relaxed">
                         Create an account to start applying for scholarships and tracking your applications.
                     </p>
                 </div>
             </div>
 
             {/* Right Side - Form */}
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', background: 'white' }}>
-                <div style={{ width: '100%', maxWidth: '450px' }}>
-                    <div style={{ marginBottom: '2rem' }}>
-                        <h2 style={{ fontSize: '2rem', fontWeight: '800', marginBottom: '0.5rem' }}>Create Account</h2>
-                        <p style={{ color: 'var(--text-muted)' }}>Already have an account? <Link to="/login" style={{ color: 'var(--primary)', fontWeight: '600' }}>Log in</Link></p>
+            <div className="flex-1 flex items-center justify-center p-8 bg-white">
+                <div className="w-full max-w-md space-y-6">
+                    <div className="text-center lg:text-left">
+                        <h2 className="text-3xl font-extrabold text-text-main mb-2">Create Account</h2>
+                        <p className="text-text-muted">Already have an account? <Link to="/login" className="text-primary font-bold hover:underline">Log in</Link></p>
                     </div>
 
                     {error && (
-                        <div style={{ background: '#fef2f2', color: '#ef4444', padding: '1rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                        <div className="bg-red-50 text-error p-4 rounded-lg flex items-center gap-2 text-sm">
                             <AlertCircle size={18} /> {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleRegister}>
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' }}>Full Name</label>
-                            <div style={{ position: 'relative' }}>
-                                <User size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '12px', left: '16px' }} />
+                    <form onSubmit={handleRegister} className="space-y-5">
+                        <div>
+                            <label className="block text-sm font-semibold text-text-main mb-2">Full Name</label>
+                            <div className="relative">
+                                <User size={20} className="absolute top-3.5 left-4 text-text-muted" />
                                 <input
                                     type="text"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     placeholder="John Doe"
-                                    style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 3rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '1rem', outline: 'none' }}
+                                    className="input input-bordered w-full pl-12 h-12 text-base focus:border-primary focus:ring-1 focus:ring-primary/20"
                                 />
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' }}>Email Address</label>
-                            <div style={{ position: 'relative' }}>
-                                <Mail size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '12px', left: '16px' }} />
+                        <div>
+                            <label className="block text-sm font-semibold text-text-main mb-2">Email Address</label>
+                            <div className="relative">
+                                <Mail size={20} className="absolute top-3.5 left-4 text-text-muted" />
                                 <input
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                     placeholder="name@example.com"
-                                    style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 3rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '1rem', outline: 'none' }}
+                                    className="input input-bordered w-full pl-12 h-12 text-base focus:border-primary focus:ring-1 focus:ring-primary/20"
                                 />
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' }}>Photo URL (Optional)</label>
-                            <div style={{ position: 'relative' }}>
-                                <User size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '12px', left: '16px' }} />
+                        <div>
+                            <label className="block text-sm font-semibold text-text-main mb-2">Photo URL (Optional)</label>
+                            <div className="relative">
+                                <User size={20} className="absolute top-3.5 left-4 text-text-muted" />
                                 <input
                                     type="url"
                                     value={formData.photoURL}
                                     onChange={(e) => setFormData({ ...formData, photoURL: e.target.value })}
                                     placeholder="https://example.com/photo.jpg"
-                                    style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 3rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '1rem', outline: 'none' }}
+                                    className="input input-bordered w-full pl-12 h-12 text-base focus:border-primary focus:ring-1 focus:ring-primary/20"
                                 />
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: '1.5rem' }}>
-                            <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.5rem' }}>Password</label>
-                            <div style={{ position: 'relative' }}>
-                                <Lock size={20} color="var(--text-muted)" style={{ position: 'absolute', top: '12px', left: '16px' }} />
+                        <div>
+                            <label className="block text-sm font-semibold text-text-main mb-2">Password</label>
+                            <div className="relative">
+                                <Lock size={20} className="absolute top-3.5 left-4 text-text-muted" />
                                 <input
                                     type="password"
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                     placeholder="Create a password"
-                                    style={{ width: '100%', padding: '0.75rem 0.75rem 0.75rem 3rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', fontSize: '1rem', outline: 'none' }}
+                                    className="input input-bordered w-full pl-12 h-12 text-base focus:border-primary focus:ring-1 focus:ring-primary/20"
                                 />
                             </div>
                             {passwordErrors.length > 0 && (
-                                <div style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#ef4444' }}>
-                                    <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Password must have:</p>
-                                    <ul style={{ paddingLeft: '1.25rem', margin: 0 }}>
+                                <div className="mt-3 text-sm text-error bg-red-50 p-3 rounded-lg">
+                                    <p className="font-bold mb-1">Password must have:</p>
+                                    <ul className="list-disc pl-5 space-y-0.5">
                                         {passwordErrors.map((err, idx) => <li key={idx}>{err}</li>)}
                                     </ul>
                                 </div>
                             )}
                         </div>
 
-                        <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                            Create Account <ArrowRight size={18} />
+                        <button type="submit" className="btn btn-primary w-full h-12 text-base font-bold flex items-center justify-center gap-2">
+                            Create Account <ArrowRight size={20} />
                         </button>
                     </form>
 
-                    <div style={{ display: 'flex', alignItems: 'center', margin: '2rem 0', color: 'var(--text-muted)' }}>
-                        <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
-                        <span style={{ padding: '0 1rem', fontSize: '0.9rem' }}>OR</span>
-                        <div style={{ flex: 1, height: '1px', background: 'var(--border)' }}></div>
+                    <div className="flex items-center gap-4 my-6">
+                        <div className="h-px bg-border flex-1"></div>
+                        <span className="text-text-muted text-sm font-medium">OR</span>
+                        <div className="h-px bg-border flex-1"></div>
                     </div>
 
-                    <button onClick={handleGoogleRegister} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', gap: '0.75rem' }}>
-                        <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" width="20" />
+                    <button
+                        onClick={handleGoogleRegister}
+                        className="btn bg-white text-black border border-gray-200 w-full h-12 flex items-center justify-center gap-2 hover:bg-gray-50"
+                    >
+                        <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><path d="m0 0H512V512H0" fill="#fff"></path><path fill="#34a853" d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"></path><path fill="#4285f4" d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"></path><path fill="#fbbc02" d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"></path><path fill="#ea4335" d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"></path></g></svg>
                         Sign up with Google
                     </button>
                 </div>
